@@ -153,7 +153,7 @@ const utils = {
 									outcome: "SUCCESS",
 									code: 200,
 									message: "Google APIs ready to use",
-									data: {}
+									data: window.gapi
 								});
 							});
 						} else {
@@ -180,7 +180,7 @@ const utils = {
 						outcome: "SUCCESS",
 						code: 200,
 						message: "Google APIs ready to use",
-						data: {}
+						data: window.gapi
 					});
 				}
 			}).catch((error) => {
@@ -189,8 +189,41 @@ const utils = {
 		},
 		places: {
 			setupAPI: async function setupAPI(key){
-				const APIReady = await addGoogleAPIScript();
-				console.log(APIReady);
+				try {
+					const setupResponse = await addGoogleAPIScript();	
+					if(setupResponse.outcome == "SUCCESS"){
+
+						console.log("succeeded!")
+
+						//SOLUTION COULD BE HERE : https://stackoverflow.com/questions/19476332/getting-gapi-client-is-undefined-when-trying-to-retrieve-an-authenticated-goog
+
+						const API = window.gapi;//setupResponse.data;
+						const url = `https://maps.googleapis.com/maps/api/js`;
+						const params = {
+							"key" : key,
+							"libraries" : "places",
+							"callback": testCallback
+						}
+
+						console.dir(window.gapi);
+
+						const request = API.client.request({
+							"path" : url,
+							"params" : params
+						});
+
+
+
+						console.log("request: ", request);
+
+
+						function testCallback(){
+							console.log("places api loadeeed!")
+						}
+					} else throw setupResponse;
+				} catch(error){
+					return error;
+				}
 			}
 		}
 	}
