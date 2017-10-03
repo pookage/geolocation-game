@@ -7,6 +7,9 @@ export default class NearbyPlaces extends React.Component {
 	constructor(){
 		super();
 
+		//private variables
+		this.PLACES_API_KEY   = "AIzaSyDwJ_bA5TA_RO5TNK3FspGc_zYxJoLws44";
+
 		//function binding
 		this.findUser         = this.findUser.bind(this);
 		this.findNearbyPlaces = this.findNearbyPlaces.bind(this);
@@ -17,8 +20,8 @@ export default class NearbyPlaces extends React.Component {
 	//------------------------------
 	async componentDidMount(){
 
-		const userLocation = await this.findUser();
-		const nearbyPlaces = await this.findNearbyPlaces(userLocation);
+		const userLocation    = await this.findUser();
+		const nearbyPlaces    = await this.findNearbyPlaces(userLocation);
 		console.log(nearbyPlaces);
 
 	}//componentDidMount
@@ -38,6 +41,7 @@ export default class NearbyPlaces extends React.Component {
 		}
 	}//findUser
 	async findNearbyPlaces(location){
+		const APILoaded = utils.google.places.setupAPI(this.PLACES_API_KEY);
 		return "monkey";
 	}//findNearbyPlaces
 	handleError(error){
@@ -51,7 +55,10 @@ export default class NearbyPlaces extends React.Component {
 	//------------------------------
 	render(){
 		return(
-			<span>loading places...</span>
+			<div>
+				<span>loading places...</span>
+			</div>
+			
 		);
 	}//render
 

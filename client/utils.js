@@ -126,9 +126,77 @@ const utils = {
 				return error;
 			})
 		}
+	},
+	google: {
+		addGoogleAPIScript: function addGoogleAPIScript(){
+
+			const timeout       = 10000;
+			const checkInterval = 100;
+
+			return new Promise((resolve, reject) => {
+
+				//add google api to page if it doesn't already exist
+				if(!window.gapi){
+
+					//add the api script to the paeg
+					const script = document.createElement("script");
+					script.src = "https://apis.google.com/js/api.js";
+					script.async = true;
+					document.body.appendChild(script);
+
+					//see if the api has loaded yet
+					const apiCheckInterval = setInterval(() => {
+						if(window.gapi){
+							clearInterval(apiCheckInterval);
+							window.gapi.load("auth2", () => {
+								resolve({
+									outcome: "SUCCESS",
+									code: 200,
+									message: "Google APIs ready to use",
+									data: {}
+								});
+							});
+						} else {
+							console.log("no google api yet...")
+						}
+					}, checkInterval);
+
+					//stop listening for API after 10 seconds;
+					setTimeout(() => {
+						clearInterval(apiCheckInterval)
+						reject({
+							outcome: "FAILURE",
+							code: 408,
+							message: "google api is taking a while to respond",
+							data: {}
+						})
+					}, timeout);
+
+				} 
+
+				//if it's already on the page then just crack on, bud!
+				else {
+					resolve({
+						outcome: "SUCCESS",
+						code: 200,
+						message: "Google APIs ready to use",
+						data: {}
+					});
+				}
+			}).catch((error) => {
+				return error;
+			})
+		},
+		places: {
+			setupAPI: async function setupAPI(key){
+				const APIReady = await addGoogleAPIScript();
+				console.log(APIReady);
+			}
+		}
 	}
 };
 
 const setupGeopookData = utils.localstorage.setupGeopookData;
+const addGoogleAPIScript = utils.google.addGoogleAPIScript;
 
 module.exports = utils;
