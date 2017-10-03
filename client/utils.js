@@ -1,5 +1,19 @@
 const utils = {
 	localstorage: {
+		setupGeopookData: function setupGeopookData(){
+			const geopook_data = {
+				users: new Array(),
+				current_user: ""
+			};
+			const safeData = JSON.stringify(geopook_data);
+			localStorage.setItem("geopook", safeData);
+			return geopook_data;
+		},//setupGeopookData
+		
+		//////////////////////////////////////////////////
+		//USER FUNCTIONS 	//////////////////////////////
+		//////////////////////////////////////////////////
+
 		setCurrentUser: function setCurrentUser(username){
 			const hasStorage = typeof(Storage !== "undefined");
 			if(hasStorage){
@@ -26,7 +40,7 @@ const utils = {
 					data: {}
 				}
 			}
-		},
+		},//setCurrentUser
 		requestCurrentUser: function requestCurrentUser(){
 			const hasStorage = typeof(Storage !== "undefined");
 			if(hasStorage){
@@ -59,16 +73,32 @@ const utils = {
 					data: {}
 				};
 			}
-		},
-		setupGeopookData: function setupGeopookData(){
-			const geopook_data = {
-				users: new Array(),
-				current_user: ""
-			};
-			const safeData = JSON.stringify(geopook_data);
-			localStorage.setItem("geopook", safeData);
-			return geopook_data;
-		}
+		},//requestCurrentUser
+		clearCurrentUser: function clearCurrentUser(){
+			const hasStorage = typeof(Storage !== "undefined");
+			if(hasStorage){
+				const geopook_data   = localStorage.getItem("geopook") || setupGeopookData();
+				const AppData        = JSON.parse(geopook_data);
+				AppData.current_user = "";
+
+				const safeData       = JSON.stringify(AppData);
+				localStorage.setItem("geopook", safeData);
+				return {
+					outcome: "SUCCESS",
+					code: 200,
+					message: `Current user removed`,
+					data: {}
+				}
+			} else {
+				return {
+					outcome: "FAILURE",
+					code: 501,
+					message: "Local storage is not enabled",
+					data: {}
+				}
+			}
+		}//clearCurrentUser
+		
 	}
 };
 

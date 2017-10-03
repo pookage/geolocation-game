@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from "components/Login/Login.jsx";
-import Home from "components/Home/Home.jsx";
+import LoggedIn from "components/LoggedIn/LoggedIn.jsx";
 import utils from 'utils.js';
 
 export default class App extends React.Component {
@@ -10,10 +10,12 @@ export default class App extends React.Component {
 		super();
 		this.state          = {};
 		this.state.loggedIn = false;
+		this.state.username = "";
 
 		//function binding
 		//-----------------------------------
 		this.login            = this.login.bind(this);
+		this.logout           = this.logout.bind(this);
 		this.checkCurrentUser = this.checkCurrentUser.bind(this);
 		this.handleError      = this.handleError.bind(this);
 
@@ -44,6 +46,12 @@ export default class App extends React.Component {
 			username
 		});
 	}//login
+	logout(){
+		this.setState({
+			loggedIn: false,
+			username: ""
+		})
+	}//logout
 	handleError(error){
 		console.log("ERROR: ", error);
 		this.setState({
@@ -60,7 +68,10 @@ export default class App extends React.Component {
 
 		if(loggedIn){
 			return(
-				<Home username={this.state.username} />
+				<LoggedIn 
+					username={this.state.username}
+					logoutSuccess={this.logout}
+				/>
 			);
 		} else {
 			return(

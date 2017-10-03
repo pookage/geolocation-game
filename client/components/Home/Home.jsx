@@ -8,14 +8,14 @@ export default class Home extends React.Component {
 	//RENDER METHDOS
 	//----------------------------
 	render(){
+
+		const { username } = this.props;
+
 		return(
 			<div>
 				<h1>
-					Logged in {this.props.username}
+					Logged in {username}
 				</h1>
-				<button>
-					Log Out
-				</button>
 			</div>
 		);
 	}//render
