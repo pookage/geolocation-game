@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import utils from 'utils.js';
 
 export default class Login extends React.Component {
@@ -9,6 +10,8 @@ export default class Login extends React.Component {
 		this.addListeners    = this.addListeners.bind(this);
 		this.removeListeners = this.removeListeners.bind(this);
 		this.handleSubmit    = this.handleSubmit.bind(this);
+		this.logInUser       = this.logInUser.bind(this);
+		this.handleError     = this.handleError.bind(this);
 	}//constructor
 
 	//LIFECYCLE METHODS
@@ -30,17 +33,39 @@ export default class Login extends React.Component {
 	}//removeListeners
 	handleSubmit(event){
 		event.preventDefault();
+		
 		const inputEl  = event.target[0];
 		const username = inputEl.value;
 		
 		if(!!username){
-			//LOGIN
-			console.log(username);
+			this.logInUser(username);
 		} else {
-			console.log("input must have a value")
+			this.handleError({
+				message: "input must have a value"
+			});
 		}
-
 	}//handleSubmit
+
+
+	//CLASS METHODS
+	//------------------------------------
+	logInUser(username){
+		try {
+			const setUserResponse = utils.localstorage.setCurrentUser(username);
+			if(setUserResponse.outcome == "SUCCESS"){
+				this.props.loginSuccess(username);
+			} else throw setUserResponse;
+		} catch(error){
+			this.handleError(error);
+		}
+	}//logInUser
+	handleError(error){
+		this.setState({
+			error: error.message
+		});
+	}//handleError
+
+
 
 	//RENDER METHODS
 	//-----------------------------------
@@ -57,3 +82,7 @@ export default class Login extends React.Component {
 	}//render
 
 }
+
+Login.propTypes = {
+	loginSuccess: PropTypes.func.isRequired
+};
