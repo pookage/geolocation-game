@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import utils from 'utils.js';
+import NearbyPlaces from "components/NearbyPlaces/NearbyPlaces.jsx";
 
 export default class Home extends React.Component {
 
@@ -16,6 +16,7 @@ export default class Home extends React.Component {
 				<h1>
 					Logged in {username}
 				</h1>
+				<NearbyPlaces />
 			</div>
 		);
 	}//render

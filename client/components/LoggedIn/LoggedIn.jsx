@@ -68,10 +68,10 @@ export default class LoggedIn extends React.Component {
 
 		return(
 			<div>
-				<Home username={username} />
 				<button ref={button => this.$logoutButton = button}>
 					Log Out
 				</button>
+				<Home username={username} />
 			</div>
 		);
 	}//render

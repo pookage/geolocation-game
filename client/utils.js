@@ -97,8 +97,35 @@ const utils = {
 					data: {}
 				}
 			}
-		}//clearCurrentUser
-		
+		}//clearCurrentUser	
+	},
+	geolocation: {
+		getUserLocation: function getUserLocation(){
+			return new Promise((resolve, reject) => {
+				if("geolocation" in navigator){
+					navigator.geolocation.getCurrentPosition(({coords}) => {
+						resolve({
+							outcome: "SUCCESS",
+							code: 200,
+							message: "User geolocation retrieved",
+							data: {
+								latitude: coords.latitude,
+								longitude: coords.longitude
+							}
+						})
+					});
+				} else {
+					reject({
+						outcome: "FAILURE",
+						code: 501,
+						message: "Geolocation is not enabled",
+						data: {}
+					});
+				}
+			}).catch((error) => {
+				return error;
+			})
+		}
 	}
 };
 
